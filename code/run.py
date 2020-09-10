@@ -47,11 +47,15 @@ def run(event={}, context={}):
             log.warn("too many venues found for resy")
 
         slots = venues[0]['slots']
-        slot = next(iter(s for s in slots if s['date']['start'] == helpers.datetime.datetime_resy(date)), None)
-        log.info("slot", slot=slot)
-        if slot == None:
+        valid_slots = helpers.resy.valid_slots(date, slots)
+
+        if len(valid_slots) == 0:
             log.warn("no slot found for resy")
             continue
+
+        slot = valid_slots[0]
+        log.info("slot", slot=slot)
+        return
 
         config_token = slot['config']['token']
         log.info("config_token", config_token=config_token)
