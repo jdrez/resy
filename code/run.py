@@ -35,13 +35,13 @@ def run(event={}, context={}):
         log.info("resy", venue_id=venue_id, party_size=party_size, date=date)
 
         if helpers.datetime.missed(date):
-            log.warn("this resy was missed")
+            log.error("this resy was missed")
             helpers.firebase.missed(d.id, r)
             continue
 
         venues = helpers.resy.find(date, venue_id, party_size)
         if len(venues) == 0:
-            log.warn("no venue found for resy")
+            log.error("no venue found for resy")
             continue
         if len(venues) > 1:
             log.warn("too many venues found for resy")
@@ -66,6 +66,7 @@ def run(event={}, context={}):
         helpers.firebase.booked(d.id, r)
 
     log.info("done")
+    return True
 
 if __name__ == '__main__':
     run();

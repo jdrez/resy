@@ -18,11 +18,11 @@ def reserve():
 
 def booked(document_id, document):
     DB.collection('booked').document(document_id).set(document)
-    DB.collection('reserve').document(document_id).delete()
+    # DB.collection('reserve').document(document_id).delete()
 
 def missed(document_id, document):
     DB.collection('missed').document(document_id).set(document)
-    DB.collection('reserve').document(document_id).delete()
+    # DB.collection('reserve').document(document_id).delete()
 
 
 init()
