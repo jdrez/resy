@@ -1,0 +1,4 @@
+open boto3
+daiquiri
+firebase-admin
+requests

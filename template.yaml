@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    MemorySize: 128
+    Timeout: 300
+
+Resources:
+  StocksConsistent:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: book/
+      Handler: run.run
+      Runtime: python3.8
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - SecretsManagerReadWrite
+      Events:
+        schedule:
+          Type: Schedule
+          Properties:
+            Schedule: cron(1 * * * ? *)
