@@ -1,5 +1,6 @@
 .envrc
 
+.aws-sam/
 .direnv/
 __pycache__/
 scratch/

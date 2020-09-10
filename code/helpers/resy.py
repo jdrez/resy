@@ -2,22 +2,27 @@ import helpers.datetime
 import helpers.logger
 
 import json
+import os
 import requests
 
 log = helpers.logger.Logger(__name__)
 
 
-API_KEY = 'VbWk7s3L4KiK5fzlO7JD3Q5EYolJI7n5'
 USER = None
 
-def write(filename, data):
-    with open(f"./scratch/{filename}.json", 'w') as f:
-        json.dump(data, f)
+def _write(filename, data):
+    if 'LAMBDA_TASK_ROOT' not in os.environ:
+        with open(f"./scratch/{filename}.json", 'w') as f:
+            json.dump(data, f)
 
 def _headers(headers):
-    return { **{
-        'Authorization': f"ResyAPI api_key=\"{API_KEY}\"",
-    }, **headers }
+    api_key = helpers.config.get('resy.api_key')
+    return {
+        **{
+            'Authorization': f"ResyAPI api_key=\"{api_key}\"",
+        },
+        **headers,
+    }
 
 def _get(url, params={}, headers={}):
     headers = _headers(headers)
@@ -38,7 +43,7 @@ def login(email, password):
         'password': password,
     }
     response = _post("https://api.resy.com/3/auth/password", data)
-    write('user', response)
+    _write('user', response)
     USER = response
 
 def find(date, venue_id, party_size):
@@ -50,7 +55,7 @@ def find(date, venue_id, party_size):
         'long': 0,
     }
     response = _get(f"https://api.resy.com/4/find", params)
-    write('find', response)
+    _write('find', response)
     return response['results']['venues']
 
 def details(config_token, date, party_size):
@@ -60,7 +65,7 @@ def details(config_token, date, party_size):
         'party_size': party_size,
     }
     response = _get(f"https://api.resy.com/3/details", params)
-    write('details', response)
+    _write('details', response)
     return response
 
 def book(book_token):

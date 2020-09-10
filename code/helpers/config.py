@@ -21,3 +21,6 @@ def get(key):
     except ValueError:
         value = CONFIG[key]
     return value
+
+
+refresh()

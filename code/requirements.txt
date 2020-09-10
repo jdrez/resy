@@ -1,4 +1,4 @@
-open boto3
-daiquiri
-firebase-admin
-requests
+boto3==1.14.58
+daiquiri==2.1.1
+firebase-admin==4.3.0
+requests==2.24.0

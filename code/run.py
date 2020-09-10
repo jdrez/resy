@@ -12,21 +12,26 @@ log = helpers.logger.Logger(__name__)
 
 def run(event={}, context={}):
     helpers.config.refresh()
-    helpers.firebase.init()
-
     email = helpers.config.get('resy.email')
     password = helpers.config.get('resy.password')
-    log.info("email", email=email)
+    log.info("email", email=email, password=password)
+
     helpers.resy.login(email, password)
     log.info("user", user=helpers.resy.USER)
-    exit()
 
-    for d in helpers.firebase.scheduled():
+    for d in helpers.firebase.reserve():
+        print("——————————")
         r = d.to_dict()
+
         venue_id = r['venue_id']
         party_size = r['party_size']
         date = helpers.datetime.parse_firebase(r['date'])
-        log.info("params", venue_id=venue_id, party_size=party_size, date=date)
+        log.info("resy", venue_id=venue_id, party_size=party_size, date=date)
+
+        if helpers.datetime.missed(date):
+            log.warn("this resy was missed")
+            helpers.firebase.missed(d.id, r)
+            continue
 
         venues = helpers.resy.find(date, venue_id, party_size)
         if len(venues) == 0:
@@ -51,6 +56,8 @@ def run(event={}, context={}):
 
         booked = helpers.resy.book(book_token)
         log.info("booked", booked=booked)
+        r['booked'] = booked
+        helpers.firebase.booked(d.id, r)
 
 
 if __name__ == '__main__':

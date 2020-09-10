@@ -13,5 +13,16 @@ def init():
     firebase_admin.initialize_app(credentials)
     DB = firestore.client()
 
-def scheduled():
-    return DB.collection('scheduled').stream()
+def reserve():
+    return DB.collection('reserve').stream()
+
+def booked(document_id, document):
+    DB.collection('booked').document(document_id).set(document)
+    DB.collection('reserve').document(document_id).delete()
+
+def missed(document_id, document):
+    DB.collection('missed').document(document_id).set(document)
+    DB.collection('reserve').document(document_id).delete()
+
+
+init()
