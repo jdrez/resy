@@ -7,7 +7,7 @@ est = pytz.timezone('America/New_York')
 def parse_firebase(dt):
     return datetime.datetime.strptime(str(dt.astimezone(est)), '%Y-%m-%d %H:%M:%S%z')
 
-def parse_rezy(dt):
+def parse_resy(dt):
     return datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M:%S').astimezone(est)
 
 def missed(dt):
@@ -15,7 +15,3 @@ def missed(dt):
 
 def date_resy(dt):
     return dt.strftime('%Y-%m-%d')
-
-# TODO: delete
-def datetime_resy(dt):
-    return dt.strftime('%Y-%m-%d %H:%M:%S')

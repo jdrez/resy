@@ -30,12 +30,14 @@ def _headers():
 
 def _get(url, params={}):
     r = requests.get(url, headers=_headers(), params=params)
-    log.info("_get", request_headers=r.request.headers)
+    if 'LAMBDA_TASK_ROOT' not in os.environ:
+        log.info("_get", request_headers=r.request.headers)
     return json.loads(r.content)
 
 def _post(url, data={}):
     r = requests.post(url, headers=_headers(), data=data)
-    log.info("_post", request_headers=r.request.headers)
+    if 'LAMBDA_TASK_ROOT' not in os.environ:
+        log.info("_post", request_headers=r.request.headers)
     response = json.loads(r.content)
     return response
 
@@ -79,9 +81,9 @@ def book(book_token):
     return response
 
 def valid_slots(date, slots):
-    valid_slots = [s for s in slots if abs((helpers.datetime.parse_rezy(s['date']['start']) - date).total_seconds()) <= 60 * 30]
+    valid_slots = [s for s in slots if abs((helpers.datetime.parse_resy(s['date']['start']) - date).total_seconds()) <= 60 * 30]
     def sort(s):
-        s_date = helpers.datetime.parse_rezy(s['date']['start'])
+        s_date = helpers.datetime.parse_resy(s['date']['start'])
         s_diff = abs((s_date - date).total_seconds())
         return (s_diff, s_date)
     valid_slots.sort(key=sort)
