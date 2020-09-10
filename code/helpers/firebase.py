@@ -14,7 +14,7 @@ def init():
     DB = firestore.client()
 
 def reserve():
-    return DB.collection('reserve').stream()
+    return DB.collection('reserve').get()
 
 def booked(document_id, document):
     DB.collection('booked').document(document_id).set(document)

@@ -6,6 +6,7 @@ import helpers.resy
 
 import datetime
 import pytz
+import re
 
 log = helpers.logger.Logger(__name__)
 
@@ -14,12 +15,17 @@ def run(event={}, context={}):
     helpers.config.refresh()
     email = helpers.config.get('resy.email')
     password = helpers.config.get('resy.password')
-    log.info("email", email=email, password=password)
+    log.info("email", email=email, password=re.sub(r".", "*", password))
+
+    reserve = helpers.firebase.reserve()
+    if len(reserve) == 0:
+        log.warn("no reservations to make")
+        return
 
     helpers.resy.login(email, password)
     log.info("user", user=helpers.resy.USER)
 
-    for d in helpers.firebase.reserve():
+    for d in reserve:
         print("——————————")
         r = d.to_dict()
 
@@ -59,6 +65,7 @@ def run(event={}, context={}):
         r['booked'] = booked
         helpers.firebase.booked(d.id, r)
 
+    log.info("done")
 
 if __name__ == '__main__':
     run();

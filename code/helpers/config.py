@@ -13,7 +13,7 @@ def refresh():
     global CONFIG
     client = boto3.client('secretsmanager')
     CONFIG = json.loads(client.get_secret_value(SecretId=f"resy")['SecretString'])
-    log.info("refresh", config=CONFIG)
+    log.info("refresh")
 
 def get(key):
     try:
