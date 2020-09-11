@@ -54,6 +54,7 @@ def run(event={}, context={}):
             log.warn("too many venues found for resy")
 
         slots = venues[0]['slots']
+        log.info("slots", slots=slots)
         valid_slots = helpers.resy.valid_slots(date, slots)
         log.info("valid_slots", valid_slots=valid_slots)
 

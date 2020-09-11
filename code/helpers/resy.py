@@ -30,14 +30,10 @@ def _headers():
 
 def _get(url, params={}):
     r = requests.get(url, headers=_headers(), params=params)
-    if 'LAMBDA_TASK_ROOT' not in os.environ:
-        log.info("_get", request_headers=r.request.headers)
     return json.loads(r.content)
 
 def _post(url, data={}):
     r = requests.post(url, headers=_headers(), data=data)
-    if 'LAMBDA_TASK_ROOT' not in os.environ:
-        log.info("_post", request_headers=r.request.headers)
     response = json.loads(r.content)
     return response
 
