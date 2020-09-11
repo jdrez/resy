@@ -83,7 +83,7 @@ def details(config_token, date, party_size):
     return response
 
 def book(book_token):
-    payment_id = next(p['id'] for p in USER['payment_methods'] if p['is_default'], None)
+    payment_id = next((p['id'] for p in USER['payment_methods'] if p['is_default']), None)
     data = {
         'book_token': book_token,
         'struct_payment_method': json.dumps({'id': payment_id})
