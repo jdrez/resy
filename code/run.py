@@ -29,14 +29,21 @@ def run(event={}, context={}):
         print("——————————")
         r = d.to_dict()
 
-        venue_id = r['venue_id']
+        location = r['location']
+        slug = r['slug']
         party_size = r['party_size']
         date = helpers.datetime.parse_firebase(r['date'])
-        log.info("resy", venue_id=venue_id, party_size=party_size, date=date)
+        log.info("resy", location=location, slug=slug, party_size=party_size, date=date)
 
         if helpers.datetime.missed(date):
-            log.error("this resy was missed")
+            log.error("resy date was missed")
             helpers.firebase.missed(d.id, r)
+            continue
+
+        venue_id = helpers.resy.venue(location, slug)
+        log.info("venue_id", venue_id=venue_id)
+        if venue_id is None:
+            log.error("no venue_id found for resy")
             continue
 
         venues = helpers.resy.find(date, venue_id, party_size)
@@ -55,7 +62,6 @@ def run(event={}, context={}):
 
         slot = valid_slots[0]
         log.info("slot", slot=slot)
-        return
 
         config_token = slot['config']['token']
         log.info("config_token", config_token=config_token)

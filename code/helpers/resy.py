@@ -51,6 +51,15 @@ def login(email, password):
     _write('user', response)
     USER = response
 
+def venue(location, slug):
+    params = {
+        'location': location,
+        'url_slug': slug,
+    }
+    response = _get(f"https://api.resy.com/3/venue", params)
+    _write('venue', response)
+    return response['id']['resy'] if 'id' in response else None
+
 def find(date, venue_id, party_size):
     params = {
         'day': helpers.datetime.date_resy(date),
@@ -74,8 +83,10 @@ def details(config_token, date, party_size):
     return response
 
 def book(book_token):
+    payment_id = next(p['id'] for p in USER['payment_methods'] if p['is_default'], None)
     data = {
         'book_token': book_token,
+        'struct_payment_method': json.dumps({'id': payment_id})
     }
     response = _post("https://api.resy.com/3/book", data)
     return response
