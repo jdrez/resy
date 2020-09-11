@@ -42,19 +42,24 @@ def run(event={}, context={}):
 
         venue_id = helpers.resy.venue(location, slug)
         log.info("venue_id", venue_id=venue_id)
+
         if venue_id is None:
             log.error("no venue_id found for resy")
             continue
 
         venues = helpers.resy.find(date, venue_id, party_size)
+
         if len(venues) == 0:
             log.error("no venue found for resy")
             continue
+
         if len(venues) > 1:
-            log.warn("too many venues found for resy")
+            log.error("too many venues found for resy")
+            continue
 
         slots = venues[0]['slots']
         log.info("slots", slots=slots)
+
         valid_slots = helpers.resy.valid_slots(date, slots)
         log.info("valid_slots", valid_slots=valid_slots)
 
@@ -74,6 +79,7 @@ def run(event={}, context={}):
 
         booked = helpers.resy.book(book_token)
         log.info("booked", booked=booked)
+
         r['booked'] = booked
         helpers.firebase.booked(d.id, r)
 
