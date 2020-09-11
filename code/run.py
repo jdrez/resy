@@ -55,6 +55,7 @@ def run(event={}, context={}):
 
         slots = venues[0]['slots']
         valid_slots = helpers.resy.valid_slots(date, slots)
+        log.info("valid_slots", valid_slots=valid_slots)
 
         if len(valid_slots) == 0:
             log.warn("no slot found for resy")
