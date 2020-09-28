@@ -4,8 +4,6 @@ import helpers.firebase
 import helpers.logger
 import helpers.resy
 
-import datetime
-import pytz
 import re
 
 log = helpers.logger.Logger(__name__)
