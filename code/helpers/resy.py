@@ -52,7 +52,7 @@ def venue(location, slug):
         'location': location,
         'url_slug': slug,
     }
-    response = _get(f"https://api.resy.com/3/venue", params)
+    response = _get("https://api.resy.com/3/venue", params)
     _write('venue', response)
     return response['id']['resy'] if 'id' in response else None
 
@@ -64,7 +64,7 @@ def find(date, venue_id, party_size):
         'lat': 0,
         'long': 0,
     }
-    response = _get(f"https://api.resy.com/4/find", params)
+    response = _get("https://api.resy.com/4/find", params)
     _write('find', response)
     return response['results']['venues']
 
@@ -74,7 +74,7 @@ def details(config_token, date, party_size):
         'day': helpers.datetime.date_resy(date),
         'party_size': party_size,
     }
-    response = _get(f"https://api.resy.com/3/details", params)
+    response = _get("https://api.resy.com/3/details", params)
     _write('details', response)
     return response
 
