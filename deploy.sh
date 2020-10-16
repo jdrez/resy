@@ -3,7 +3,7 @@ echo "deploy | start"
 
 cd "$(dirname $0)"
 
-sam build --use-container --debug
+sam build --debug
 
 sam deploy \
     --stack-name "resy" \
